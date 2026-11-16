@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "しおり",
+  "short_name": "しおり",
+  "lang": "ja",
+  "description": "青空文庫と紙の本を探し、読書の続きを記録する。",
+  "start_url": "./#search",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f5ee",
+  "theme_color": "#2e513e",
+  "icons": [
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

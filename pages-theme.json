@@ -1,0 +1,21 @@
+{
+  "theme": {
+    "name": "しおり",
+    "subtitle": "次の一冊を、見つけに。",
+    "note": "",
+    "accent": "#2e513e",
+    "paper": "#f7f5ee",
+    "density": "roomy",
+    "hero": true,
+    "picks": [
+      "000773",
+      "001567",
+      "000127",
+      "043737",
+      "000301",
+      "043754"
+    ]
+  },
+  "version": 1,
+  "loansEnabled": false
+}
