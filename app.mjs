@@ -471,7 +471,7 @@ function showNearby() {
   const store = el('section', undefined, 'panel');
   const library = el('section', undefined, 'panel');
   store.append(el('h2', '書店'), el('p', '紀伊國屋書店の公式ページで、店舗の在庫や取り置きを確認できます。'));
-  library.append(el('h2', '図書館'), el('p', 'カーリルで所蔵と貸出を確認できます。'));
+  library.append(el('h2', '図書館'), el('p', 'カーリルで図書館を選ぶと、この本の貸出状況を確認できます。'));
   const makeMap = label => {
     const a = link('地図で探す ↗', mapLink('近くの' + label), 'button outline');
     a.onclick = () => { a.href = mapLink((pref.value.trim() + city.value.trim() || '近くの') + ' ' + label); };
@@ -481,7 +481,7 @@ function showNearby() {
   storeActions.append(makeMap('書店'), link('紀伊國屋の在庫を確認 ↗', book.isbn
     ? 'https://www.kinokuniya.co.jp/f/dsg-01-' + book.isbn : 'https://store.kinokuniya.co.jp/user-guide/stock/', 'button outline'));
   const libActions = el('div', undefined, 'button-row');
-  libActions.append(makeMap('図書館'), link('カーリルで確認 ↗', calilLink(book), 'button outline'));
+  libActions.append(link('カーリルで貸出状況を確認 ↗', calilLink(book), 'button primary'), makeMap('図書館'));
   store.append(storeActions);
   library.append(libActions);
   const loanArea = el('div');
@@ -546,7 +546,9 @@ function trustedReading(node) {
   return fragment;
 }
 function saveReading() {
-  if (activeReader?.ready) remember('shiori-reader:' + activeReader.id, window.scrollY);
+  if (activeReader?.panel) {
+    remember('shiori-reader-x:' + activeReader.id, activeReader.panel.scrollLeft);
+  }
 }
 async function showReader(id) {
   const stateId = ++renderId;
@@ -561,12 +563,13 @@ async function showReader(id) {
     header.prepend(button('‹ 戻る', () => go(lastTab)));
     header.append(button('読書記録', () => edit(book), 'primary'));
     if (onPages) {
-      const frame = el('iframe', undefined, 'reading-frame');
-      frame.title = book.title + 'の本文（青空文庫）';
-      frame.setAttribute('sandbox', '');
-      frame.referrerPolicy = 'no-referrer';
-      frame.src = book.text;
-      main.append(link('青空文庫の公式ページを開く ↗', book.text, 'button outline'), frame);
+      const options = el('div', undefined, 'button-row');
+      options.append(
+        link('青空 in Browsersで縦書きで読む ↗',
+          'https://aozora.binb.jp/reader/main.html?cid=' + String(Number(id)), 'button primary'),
+        link('青空文庫の公式本文 ↗', book.text, 'button outline')
+      );
+      main.append(options);
       return;
     }
     const panel = el('article', undefined, 'panel read-body');
@@ -578,10 +581,19 @@ async function showReader(id) {
       const documentText = new DOMParser().parseFromString(result.html, 'text/html');
       const reading = documentText.querySelector('.main_text');
       if (!reading) throw new Error('Missing body');
-      panel.replaceChildren(trustedReading(reading));
-      const restore = stored('shiori-reader:' + id, 0);
-      activeReader = { id, ready: true };
-      requestAnimationFrame(() => { if (stateId === renderId) window.scrollTo(0, restore); });
+      const text = el('div', undefined, 'read-text');
+      text.append(trustedReading(reading));
+      panel.classList.add('read-columns');
+      panel.tabIndex = 0;
+      panel.setAttribute('aria-label', '本文。右から左へ横スクロール');
+      panel.replaceChildren(text);
+      const controls = el('div', undefined, 'button-row');
+      const page = direction => panel.scrollBy({ left: direction * panel.clientWidth * 0.85, behavior: 'smooth' });
+      controls.append(button('前へ', () => page(1)), button('次へ', () => page(-1)));
+      panel.before(controls);
+      const restore = stored('shiori-reader-x:' + id, 0);
+      activeReader = { id, panel };
+      requestAnimationFrame(() => { if (stateId === renderId) panel.scrollLeft = restore; });
     } catch { if (panel.isConnected) state(panel, '本文を取得できませんでした', '「青空文庫で開く」から公式ページを確認できます。'); }
   } catch {
     if (stateId === renderId) state(main, '作品を読み込めませんでした');
