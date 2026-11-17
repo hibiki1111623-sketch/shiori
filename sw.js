@@ -1,7 +1,7 @@
 const scope = new URL('./', self.location.href);
 const prefix = 'shiori-app-' + scope.pathname + ':';
-const CACHE = prefix + 'v4';
-const files = ['./', './app.mjs', './theme.mjs', './paper.mjs', './style.css', './manifest.webmanifest',
+const CACHE = prefix + 'v6';
+const files = ['./', './app.mjs', './theme.mjs', './paper.mjs', './zxing-browser.min.js', './style.css', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './hero.jpg', './aozora.tsv'].map(path => new URL(path, scope).href);
 
 self.addEventListener('install', event => {

@@ -63,6 +63,7 @@ small,.muted{color:var(--muted)}
 .segment button{border:0;background:transparent;padding:7px 14px;border-radius:9px;min-height:40px;white-space:nowrap;font-weight:650;font-size:14px}
 .segment button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 4px #252b2717}
 .search-form{display:flex;gap:10px}
+.search-panel>.button{margin-top:10px}
 .search-form input{min-width:0;flex:1}
 input:not([type="checkbox"]),select,textarea{border:1px solid #cbcdbf;border-radius:9px;background:#fffefa;padding:10px 12px;min-height:44px}
 input[type="file"]{max-width:100%}
@@ -78,10 +79,12 @@ input[type="file"]{max-width:100%}
 .result{width:100%;display:flex;align-items:center;text-align:left;gap:13px;padding:13px;min-height:100px;min-width:0;
   background:var(--surface);border:1px solid var(--line);border-radius:13px;color:var(--ink)}
 .result:hover{border-color:#889584;box-shadow:0 2px 8px #272c2111}
-.cover{flex:none;display:flex;align-items:center;justify-content:center;width:49px;height:68px;border-radius:3px 6px 6px 3px;
-  color:#fdf5df;box-shadow:inset 4px 0 #0004,inset 6px 0 #fff2,2px 3px 5px #30291524;
-  font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-size:11px;writing-mode:vertical-rl;line-height:1.06;padding:6px;
-  overflow:hidden;background-image:repeating-linear-gradient(45deg,#fff0 0 3px,#fff1 4px,#fff0 5px)}
+.cover{flex:none;position:relative;display:grid;place-items:center;width:49px;height:68px;border-radius:4px;
+  background:#e9ece4;color:#455249;font-size:9px;text-align:center;overflow:hidden}
+.cover-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0}
+.cover-photo.loaded{opacity:1}
+.barcode-preview{display:block;width:100%;max-height:52vh;margin-top:10px;border-radius:12px;object-fit:contain;background:#202823}
+video[hidden],button[hidden]{display:none}
 .result strong{display:block;line-height:1.45;font-size:15px;overflow-wrap:anywhere}
 .result small{display:block;margin-top:4px;font-size:12px;overflow-wrap:anywhere}
 .result .record{color:var(--ink);font-weight:650}
